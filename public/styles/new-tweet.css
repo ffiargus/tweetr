@@ -6,12 +6,12 @@
   border: solid 1px lightgrey;
 }
 
-form {
-  padding:
-}
-
 h2 {
   border-bottom: solid 1px;
+}
+
+.negInput {
+  color: red;
 }
 
 
