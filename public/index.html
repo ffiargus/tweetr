@@ -38,22 +38,22 @@
     <!-- Page-specific (main) content here -->
     <main class="container">
 
-    <section class="new-tweet">
-      <h2>Compose Tweet</h2>
-      <form method="POST" action="/tweets/">
-        <textarea name="text" placeholder="What are you humming about?"></textarea>
-        <input type="submit" value="Tweet">
-        <span class="counter">140</span>
-      </form>
-    </section>
+      <section class="new-tweet">
+        <h2>Compose Tweet</h2>
+        <form method="POST" action="/tweets/">
+          <textarea name="text" placeholder="What are you humming about?"></textarea>
+          <input type="submit" value="Tweet">
+          <span class="counter">140</span>
+        </form>
+      </section>
 
-    <section class="old-tweet">
-      <article>
-        <header><img class="like" src="/images/like.png"><h1>Bill Fields</h1><p>@MrFields</p></header>
-        <p>Little tweet here</p>
-        <footer>10 days ago<img class="share" src="/images/share.png"><img class="flag" src="/images/flag.png"><img class="like" src="/images/like.png"></footer>
-      </article>
-    </section>
+      <section class="tweets-container">
+        <!-- <article class="old-tweet" >
+          <header><img src="/images/like.png"><h1>Bill Fields</h1><p>@MrFields</p></header>
+          <p>Little tweet here</p>
+          <footer>10 days ago<img class="share" src="/images/share.png"><img class="flag" src="/images/flag.png"><img class="like" src="/images/like.png"></footer>
+        </article> -->
+      </section>
     </main>
 
   </body>
