@@ -4,6 +4,7 @@
   background-color: #eee;
   margin: 0 2em 0 2em;
   border: solid 1px lightgrey;
+  display: none;
 }
 
 h2 {
@@ -24,13 +25,13 @@ h2 {
 
 #submit-post {
   float: left;
-  display: inline;
+  /*display: inline;*/
 }
 
 .counter {
   float: right;
   font-style: italic;
-  display: inline;
+  /*display: inline;*/
 }
 
 textarea {

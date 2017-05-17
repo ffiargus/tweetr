@@ -20,3 +20,23 @@ nav {
   line-height: 80px;
   font-size: 2em;
 }
+
+#compose-button {
+  border-radius: 5px;
+  background-color: #eee;
+  float: right;
+  color: #00a087;
+  width: 100px;
+  padding: 20px;
+  text-align: center;
+  display: inline-flex;
+  opacity: 0.95;
+  border: solid 1px black;
+  margin: 10px;
+  cursor: pointer;
+}
+#compose-button:hover {
+  opacity: 1;
+  color: black;
+}
+

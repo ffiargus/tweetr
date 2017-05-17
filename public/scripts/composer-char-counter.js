@@ -7,8 +7,8 @@ $(function() {
       $(this).closest(".new-tweet").find(".counter").addClass("negInput");
       $("#flash2").slideDown();
     } else {
-      $(this).closest(".new-tweet").find(".counter").removeClass("negInput");
       $("#submit-post").prop('disabled', false);
+      $(this).closest(".new-tweet").find(".counter").removeClass("negInput");
       $("#flash2").slideUp();
     }
   });

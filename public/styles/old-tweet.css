@@ -19,6 +19,10 @@
 
 .old-tweet p {
   padding: 20px;
+  border: 10px;
+  margin: 10px;
+  display: block;
+  overflow-wrap: break-word;
 }
 
 .old-tweet header p {
