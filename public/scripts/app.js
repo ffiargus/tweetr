@@ -97,33 +97,78 @@ function msToTime(timeStamp) {
 }
 
 
-  function createTweetElement(tweetInfo) {
-    let tweet = $("<article>").addClass("old-tweet");
-    tweet.append(
-      $("<header>").append(
-        $("<img>").attr("src", tweetInfo.user.avatars.small),
-        $("<h1>").text(tweetInfo.user.name),
-        $("<p>").text(tweetInfo.user.handle)),
-      $("<p>").text(tweetInfo.content.text),
-      $("<footer>").text(msToTime(tweetInfo.created_at)).append(
-        $("<img>").attr("src", "/images/share.png"),
-        $("<img>").attr("src", "/images/flag.png"),
-        $("<img>").attr("src", "/images/like.png"))
-    )
-    return tweet;
-  }
+function createTweetElement(tweetInfo) {
+  let tweet = $("<article>").addClass("old-tweet");
+  tweet.append(
+    $("<header>").append(
+      $("<img>").attr("src", tweetInfo.user.avatars.small),
+      $("<h1>").text(tweetInfo.user.name),
+      $("<p>").text(tweetInfo.user.handle)),
+    $("<p>").text(tweetInfo.content.text),
+    $("<footer>").text(msToTime(tweetInfo.created_at)).append(
+      $("<img>").attr("src", "/images/share.png"),
+      $("<img>").attr("src", "/images/flag.png"),
+      $("<img>").attr("src", "/images/like.png"))
+  )
+  return tweet;
+}
 
-  function renderTweets(allTweets) {
-    for (let tweetInfo of allTweets) {
-      let $tweet = createTweetElement(tweetInfo);
-      console.log($tweet);
-      $(".tweets-container").append($tweet);
+function renderNewTweet(allTweets) {
+  let $tweet = createTweetElement(allTweets.pop());
+  $(".tweets-container").prepend($tweet);
+}
 
-    }
+function renderTweets(allTweets) {
+  for (let tweetInfo of allTweets) {
+    let $tweet = createTweetElement(tweetInfo);
+    console.log($tweet);
+    $(".tweets-container").prepend($tweet);
   }
+}
 
 $(function() {
-  renderTweets(data);
+
+  function loadTweets(q) {
+    $.ajax({
+      url: "/tweets/",
+      success: function(data) {
+        if(q) {
+          renderTweets(data);
+        } else {
+          renderNewTweet(data);
+        };
+      },
+      failure: function() {
+        console.error("loding failed");
+      }
+    });
+  }
+  $("#flash1").slideUp();
+
+  loadTweets("all");
+
+  $("textarea").on("input", function() {$("#flash1").slideUp()});
+
+  $("#submit-tweet").on('submit', function (event) {
+    event.preventDefault();
+    let serialized = $(this).serialize();
+    if(serialized === "text=") {
+      $("#flash1").slideDown();
+    } else {
+      $.ajax({
+        url: "/tweets/",
+        method: "POST",
+        data: serialized,
+        success: function() {
+          console.log(this.data);
+          loadTweets();
+        },
+        failure: function() {
+          console.error("failed");
+        }
+      });
+    };
+  });
   // console.log($tweet);
 });
 

@@ -4,7 +4,7 @@
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   background-color: #eee;
-  padding: 10px 10px 35px 10px;
+  padding: 10px 10px 40px 10px;
 }
 .old-tweet header h1 {
   margin: 0 0 0 0;
@@ -18,13 +18,14 @@
 }
 
 .old-tweet p {
-  padding: 10px;
+  padding: 20px;
 }
 
 .old-tweet header p {
   float: right;
-  margin: 0 0 100px 0;
-  padding: 10px;
+  /*margin: 0 0 100px 0;*/
+  display: inline;
+  padding: 0;
 }
 
 .old-tweet {
