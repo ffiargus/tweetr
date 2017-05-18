@@ -35,8 +35,21 @@ nav {
   margin: 10px;
   cursor: pointer;
 }
+
 #compose-button:hover {
   opacity: 1;
   color: black;
+}
+
+#register-button {
+
+}
+
+#login-button {
+
+}
+
+#logout-button {
+
 }
 

@@ -9,17 +9,17 @@ module.exports = function makeDataHelpers(db) {
 
     // Saves a tweet to `db`
     saveTweet: function(newTweet, callback) {
-      simulateDelay(() => {
-        db.tweets.push(newTweet);
-        callback(null, true);
-      });
+      db.collection("tweets").insertOne(newTweet)
+      callback(null, true);
     },
 
     // Get all tweets in `db`, sorted by newest first
     getTweets: function(callback) {
-      simulateDelay(() => {
+      db.collection("tweets").find().toArray((err, results) => {
+        if (err) throw err;
         const sortNewestFirst = (a, b) => a.created_at - b.created_at;
-        callback(null, db.tweets.sort(sortNewestFirst));
+        callback(null, results.sort(sortNewestFirst));
+        //db.close();
       });
     }
 
