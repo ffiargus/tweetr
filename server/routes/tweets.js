@@ -1,9 +1,9 @@
 "use strict";
 
-const userHelper    = require("../lib/util/user-helper")
-
 const express       = require('express');
+const app           = express();
 const tweetsRoutes  = express.Router();
+
 
 module.exports = function(DataHelpers) {
 
@@ -23,16 +23,20 @@ module.exports = function(DataHelpers) {
       return;
     }
 
-    const user = req.body.user ? req.body.user : userHelper.generateRandomUser();
+    // const user = req.body.user ? req.body.user : userHelper.generateRandomUser();
     const tweet = {
-      user: user,
+      user: {
+        name: "",
+        handle: "",
+        avatars: ""
+      },
       content: {
         text: req.body.text
       },
       created_at: Date.now()
     };
 
-    DataHelpers.saveTweet(tweet, (err) => {
+    DataHelpers.saveTweet(req.session.userID, tweet, (err) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
@@ -41,6 +45,31 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  tweetsRoutes.post("/login", function(req, res) {
+    DataHelpers.validateLogin(req.body.email, req.body.password, (handle) => {
+      if (!handle) {
+        console.log("invalid user");
+      } else {
+        console.log(handle);
+        req.session.userID = handle;
+        res.redirect("/");
+      };
+
+    })
+  });
+
+  tweetsRoutes.post("/logout", function(req, res) {
+    req.session = null;
+    res.redirect("/");
+  });
+
+  tweetsRoutes.post("/register", function(req, res) {
+    DataHelpers.registerUser(req.body.email, req.body.password, req.body.handle, req.body.name, (err) => {
+      if (err) {
+        console.log(err);
+      };
+    });
+  });
   return tweetsRoutes;
 
 }

@@ -68,7 +68,7 @@
 
 function msToTime(timeStamp) {
   let d = new Date();
-  let duration = d.getTime() - timeStamp;
+  let duration = d.getTime() - 10000 - timeStamp;
   let minutes = parseInt((duration/(1000*60))%60),
       hours = parseInt((duration/(1000*60*60))%24),
       days = parseInt((duration/(1000*60*60*24))%365),
@@ -175,6 +175,32 @@ $(function() {
     $("#flash2").slideUp();
     $(".new-tweet").slideToggle("fast");
     $(".new-tweet").find("textarea").focus();
+  });
+
+  $("#login-button").on("click", () => {
+    $("#register-form").slideUp();
+    $("#login-form").slideToggle();
+    // $(".").find("textarea").focus();
+  });
+
+  $("#logout-button").on("click", (event) => {
+    event.preventDefault();
+    $.ajax({
+        url: "/tweets/logout",
+        method: "POST",
+        success: () => {
+          console.log("successs");
+        },
+        failure: () => {
+          console.error("failed");
+        }
+      });
+  });
+
+  $("#register-button").on("click", () => {
+    $("#login-form").slideUp();
+    $("#register-form").slideToggle();
+    // $(".new-tweet").find("textarea").focus();
   });
   // console.log($tweet);
 });

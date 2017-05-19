@@ -7,7 +7,7 @@ const md5 = require('md5');
 
 module.exports = {
 
-  generateRandomUser: () => {
+  generateRandomAvatars: () => {
     const gender    = chance.gender();
     const firstName = chance.first({gender: gender});
     const lastName  = chance.last();
@@ -34,10 +34,6 @@ module.exports = {
       large:   `${avatarUrlPrefix}_200.png`
     }
 
-    return {
-      name: userName,
-      handle: userHandle,
-      avatars: avatars
-    };
+    return avatars;
   }
 };

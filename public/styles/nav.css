@@ -1,11 +1,63 @@
 nav {
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   height: 80px;
   width: 100%;
   background-color: #00a087;
   color: #e8fdff;
   padding: 0 2em 0 2em;
+}
+
+input[type="email"], input[type="password"], input[type="text"] {
+  width: 70%;
+  float: right;
+  margin: 2px;
+  display: block;
+  /*margin: 2px;*/
+  /*position: absolute;*/
+  /*right: 0px;*/
+
+  /*display: inline;*/
+}
+
+label {
+  display: inline-block;
+  float: left;
+  margin-top: 8px
+}
+
+input[type="submit"] {
+  /*margin: 5px;*/
+  /*position: absolute;*/
+  margin-bottom: 0px;
+}
+
+#login-form {
+  float: right;
+  width: 300px;
+  margin: 90px 0 0 60%;
+  padding: 2%;
+  position: fixed;
+  /*z-index: 1;*/
+  background-color: white;
+  border-radius: 5px;
+  border: solid 1px black;
+  color: black;
+  display: none;
+}
+
+#register-form {
+  float: right;
+  width: 300px;
+  margin: 90px 0 0 60%;
+  padding: 2%;
+  position: fixed;
+  z-index: 3;
+  background-color: white;
+  border-radius: 5px;
+  border: solid 1px black;
+  color: black;
+  display: none;
 }
 
 #nav-bar .logo {
@@ -21,35 +73,22 @@ nav {
   font-size: 2em;
 }
 
-#compose-button {
+div.button {
   border-radius: 5px;
   background-color: #eee;
+  border: solid 1px black;
   float: right;
   color: #00a087;
   width: 100px;
   padding: 20px;
-  text-align: center;
-  display: inline-flex;
+  display: block;
   opacity: 0.95;
-  border: solid 1px black;
   margin: 10px;
   cursor: pointer;
+  text-align: center;
 }
 
-#compose-button:hover {
+div.button:hover {
   opacity: 1;
   color: black;
 }
-
-#register-button {
-
-}
-
-#login-button {
-
-}
-
-#logout-button {
-
-}
-
