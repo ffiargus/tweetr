@@ -23,7 +23,6 @@ module.exports = function(DataHelpers) {
       return;
     }
 
-    // const user = req.body.user ? req.body.user : userHelper.generateRandomUser();
     const tweet = {
       user: {
         name: "",
@@ -45,12 +44,17 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  tweetsRoutes.get("/renderlogin", function(req, res) {
+    let userID = req.session.userID;
+    res.json(userID);
+  });
+
   tweetsRoutes.post("/login", function(req, res) {
-    DataHelpers.validateLogin(req.body.email, req.body.password, (handle) => {
+    DataHelpers.validateLogin(req.body.email, req.body.password, (handle, err) => {
       if (!handle) {
-        console.log("invalid user");
+        console.error(err);
       } else {
-        console.log(handle);
+        console.log(handle, "logged in");
         req.session.userID = handle;
         res.redirect("/");
       };
@@ -67,7 +71,11 @@ module.exports = function(DataHelpers) {
     DataHelpers.registerUser(req.body.email, req.body.password, req.body.handle, req.body.name, (err) => {
       if (err) {
         console.log(err);
-      };
+      } else {
+        console.log(req.body.handle);
+        req.session.userID = "@" + req.body.handle;
+        res.redirect("/");
+      }
     });
   });
   return tweetsRoutes;

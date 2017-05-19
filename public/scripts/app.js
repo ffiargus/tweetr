@@ -3,78 +3,22 @@
  * jQuery is already loaded
  * Reminder: Use (and do all your DOM work in) jQuery's document ready function
  */
-// const tweetData = {
-//   "user": {
-//     "name": "Newton",
-//     "avatars": {
-//       "small":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_50.png",
-//       "regular": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188.png",
-//       "large":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_200.png"
-//     },
-//     "handle": "@SirIsaac"
-//   },
-//   "content": {
-//     "text": "If I have seen further it is by standing on the shoulders of giants"
-//   },
-//   "created_at": 1461116232227
-// }
 
-// const data = [
-//   {
-//     "user": {
-//       "name": "Newton",
-//       "avatars": {
-//         "small":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_50.png",
-//         "regular": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188.png",
-//         "large":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_200.png"
-//       },
-//       "handle": "@SirIsaac"
-//     },
-//     "content": {
-//       "text": "If I have seen further it is by standing on the shoulders of giants"
-//     },
-//     "created_at": 1494954236401
-//   },
-//   {
-//     "user": {
-//       "name": "Descartes",
-//       "avatars": {
-//         "small":   "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc_50.png",
-//         "regular": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc.png",
-//         "large":   "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc_200.png"
-//       },
-//       "handle": "@rd" },
-//     "content": {
-//       "text": "Je pense , donc je suis"
-//     },
-//     "created_at": 1480813959088
-//   },
-//   {
-//     "user": {
-//       "name": "Johann von Goethe",
-//       "avatars": {
-//         "small":   "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_50.png",
-//         "regular": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1.png",
-//         "large":   "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_200.png"
-//       },
-//       "handle": "@johann49"
-//     },
-//     "content": {
-//       "text": "Es ist nichts schrecklicher als eine tätige Unwissenheit."
-//     },
-//     "created_at": 1461113796368
-//   }
-// ];
+
+let loginStatus = false;
 
 function msToTime(timeStamp) {
   let d = new Date();
-  let duration = d.getTime() - 10000 - timeStamp;
+  let duration = d.getTime() - timeStamp;
   let minutes = parseInt((duration/(1000*60))%60),
       hours = parseInt((duration/(1000*60*60))%24),
       days = parseInt((duration/(1000*60*60*24))%365),
       months = parseInt((duration/(1000*60*60*24*30))%12),
       years = parseInt((duration/(1000*60*60*24*365)));
-  if(years > 1)
+
+  if (duration < 30000)
+    return "Just posted";
+  else if(years > 1)
     return years + " Years ago";
   else if(years > 0)
     return years + " Year ago";
@@ -121,12 +65,34 @@ function renderNewTweet(allTweets) {
 function renderTweets(allTweets) {
   for (let tweetInfo of allTweets) {
     let $tweet = createTweetElement(tweetInfo);
-    console.log($tweet);
     $(".tweets-container").prepend($tweet);
   }
 }
 
 $(function() {
+
+  function toggleLogin(status) {
+    if (status) {
+      console.log("cookie here");
+      $("#compose-button").fadeIn("slow");
+      $("#logout-button").fadeIn("slow");
+      $("#register-button").fadeOut("fast");
+      $("#login-button").fadeOut("fast");
+    }
+    else {
+      $("#compose-button").fadeOut("fast");
+      $("#logout-button").fadeOut("fast");
+      $("#register-button").fadeIn("slow");
+      $("#login-button").fadeIn("slow");
+    }
+  }
+
+  $.get("/tweets/renderlogin/").done((data) => {
+    if (data) {
+      loginStatus = true;
+    }
+    toggleLogin(loginStatus);
+  });
 
   function loadTweets(q) {
     $.ajax({
@@ -134,6 +100,7 @@ $(function() {
       success: (data) => {
         if(q === "all") {
           renderTweets(data);
+          toggleLogin(loginStatus);
         } else if(q === "new") {
           renderNewTweet(data);
         };
@@ -168,6 +135,8 @@ $(function() {
         }
       });
     };
+    $(".new-tweet").find("textarea").val("");
+    // $(".new-tweet").find(".counter").text(140);
   });
 
   $("#compose-button").on("click", () => {
@@ -190,6 +159,7 @@ $(function() {
         method: "POST",
         success: () => {
           console.log("successs");
+          location.reload();
         },
         failure: () => {
           console.error("failed");

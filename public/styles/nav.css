@@ -73,6 +73,14 @@ input[type="submit"] {
   font-size: 2em;
 }
 
+/*#compose-button {
+  z-index: 3;
+}
+
+#logout-button {
+  z-index: 3;
+}*/
+
 div.button {
   border-radius: 5px;
   background-color: #eee;
@@ -86,6 +94,7 @@ div.button {
   margin: 10px;
   cursor: pointer;
   text-align: center;
+  display: none;
 }
 
 div.button:hover {

@@ -3,6 +3,7 @@
 // Simulates the kind of delay we see with network or filesystem operations
 const simulateDelay = require("./util/simulate-delay");
 const userHelper    = require("../lib/util/user-helper");
+const bcrypt        = require("bcrypt");
 
 // Defines helper functions for saving and getting tweets, using the database `db`
 module.exports = function makeDataHelpers(db) {
@@ -43,11 +44,13 @@ module.exports = function makeDataHelpers(db) {
     },
 
     validateLogin: function(Qemail, Qpass, callback) {
-      db.collection("users").find({email: Qemail}).toArray((err, results) => {
-          if (results[0].password === Qpass) {
-            callback(results[0].handle);
+      db.collection("users").find({email: Qemail.toLowerCase()}).toArray((err, results) => {
+          if (!results[0]) {
+            callback(null, "invalid user");
+          } else if (bcrypt.compareSync(Qpass, results[0].password)) {
+            callback(results[0].handle, null);
           } else {
-            callback(null);
+            callback(null, "wrong password");
           }
 
       });
@@ -57,16 +60,19 @@ module.exports = function makeDataHelpers(db) {
       if (Qname === "" || Qemail === "" || Qpass === "" || Qhandle === ""){
         callback("missing input");
       } else {
-        Qhandle = "@" + Qhandle;
+        let hashedPass = bcrypt.hashSync(Qpass, 10);
+        Qhandle = "@" + Qhandle.toLowerCase();
         let newUser = {
-          email: Qemail,
-          password: Qpass,
+          email: Qemail.toLowerCase(),
+          password: hashedPass,
           handle: Qhandle,
           name: Qname,
           avatars: userHelper.generateRandomAvatars()
         }
         if (isDuplicateAccount(newUser)) {
           callback("username/handle already registered");
+        } else {
+          callback();
         }
       }
 
