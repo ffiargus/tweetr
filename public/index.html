@@ -39,12 +39,14 @@
 
       <div id="compose-button" class="button">Compose</div>
 
+      <div id="settings-button" class="button">Settings</div>
+
       <div id="login-button" class="button">Login</div>
 
       <div id="register-button" class="button">Register</div>
 
       <section id="login-form">
-        <form method="POST" action="/tweets/login">
+        <form method="POST" action="/login">
           <label for="email">E-Mail:</label>
           <input id="email" type="email" name="email">
           <label for="password">Password:</label>
@@ -53,7 +55,7 @@
         </form>
       </section>
       <section id="register-form">
-        <form method="POST" action="/tweets/register">
+        <form method="POST" action="/register">
           <label for="email">E-Mail:</label>
           <input id="email" type="email" name="email">
           <label for="password">Password:</label>
@@ -83,11 +85,6 @@
       <p class="flash-message" id="flash2">Character limit reached</p>
 
       <section class="tweets-container">
-        <!-- <article class="old-tweet" >
-          <header><img src="/images/like.png"><h1>Bill Fields</h1><p>@MrFields</p></header>
-          <p>Little tweet here</p>
-          <footer>10 days ago<img class="share" src="/images/share.png"><img class="flag" src="/images/flag.png"><img class="like" src="/images/like.png"></footer>
-        </article> -->
       </section>
     </main>
 

@@ -19,7 +19,7 @@ module.exports = function(DataHelpers) {
 
   tweetsRoutes.post("/", function(req, res) {
     if (!req.body.text) {
-      res.status(400).json({ error: 'invalid request: no data in POST body'});
+      res.status(400).json({ error: "invalid request: no data in POST body"});
       return;
     }
 
@@ -32,6 +32,8 @@ module.exports = function(DataHelpers) {
       content: {
         text: req.body.text
       },
+      likes: [],
+      flags: [],
       created_at: Date.now()
     };
 
@@ -44,40 +46,19 @@ module.exports = function(DataHelpers) {
     });
   });
 
-  tweetsRoutes.get("/renderlogin", function(req, res) {
-    let userID = req.session.userID;
-    res.json(userID);
-  });
-
-  tweetsRoutes.post("/login", function(req, res) {
-    DataHelpers.validateLogin(req.body.email, req.body.password, (handle, err) => {
-      if (!handle) {
-        console.error(err);
+  //handles like requests using a put method
+  tweetsRoutes.put("/:tID", function(req, res) {
+    let uID = req.session.userID;
+    let tID = req.params.tID;
+    DataHelpers.likeTweet(uID, tID, (err, unLike) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
       } else {
-        console.log(handle, "logged in");
-        req.session.userID = handle;
-        res.redirect("/");
-      };
-
+        res.json(unLike);
+      }
     })
   });
 
-  tweetsRoutes.post("/logout", function(req, res) {
-    req.session = null;
-    res.redirect("/");
-  });
-
-  tweetsRoutes.post("/register", function(req, res) {
-    DataHelpers.registerUser(req.body.email, req.body.password, req.body.handle, req.body.name, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(req.body.handle);
-        req.session.userID = "@" + req.body.handle;
-        res.redirect("/");
-      }
-    });
-  });
   return tweetsRoutes;
 
 }

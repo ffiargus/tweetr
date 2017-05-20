@@ -1,6 +1,6 @@
 "use strict";
 
-// Basic express setup:
+// Express setup:
 
 const PORT          = 8080;
 const express       = require("express");
@@ -14,32 +14,34 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieSession({
   name: "session",
-  keys: ["key1", "key2"]
-  // maxAge: 60 * 60 * 1000
+  keys: ["key1", "key2"],
+  maxAge: 60 * 60 * 1000
 
 }));
 
+//Connects to the Mongodb database at the URI of Tweeter
+//using the standard mongodb port 27017
 MongoClient.connect(MONGODB_URI, (err, db) => {
+
+  //logs connection status
   if (err) {
     console.error(`Failed to connect: ${MONGODB_URI}`);
     throw err;
   }
   console.log(`Connected to mongodb: ${MONGODB_URI}`);
+
+  //Sends database into datahelpers module
+  //dataHelpers is the only database that accesses the database
   const DataHelpers = require("./lib/data-helpers.js")(db);
 
-// The `data-helpers` module provides an interface to the database of tweets.
-// This simple interface layer has a big benefit: we could switch out the
-// actual database it uses and see little to no changes elsewhere in the code
-// (hint hint).
-//
-// Because it exports a function that expects the `db` as a parameter, we can
-// require it and pass the `db` parameter immediately:
-
+  //The following are modules to organize http requests/responses
+  //functions created in the dataHelpers are sent into
+  //the routes to give access to database
+  const rootRoutes = require("./routes/root")(DataHelpers);
   const tweetsRoutes = require("./routes/tweets")(DataHelpers);
-// The `tweets-routes` module works similarly: we pass it the `DataHelpers` object
-// so it can define routes that use it to interact with the data layer.
 
-// Mount the tweets routes at the "/tweets" path prefix:
+  //using our express server at each paths
+  app.use("/", rootRoutes);
   app.use("/tweets", tweetsRoutes);
 });
 

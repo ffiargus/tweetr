@@ -1,25 +1,29 @@
 "use strict";
 
-// Simulates the kind of delay we see with network or filesystem operations
-const simulateDelay = require("./util/simulate-delay");
 const userHelper    = require("../lib/util/user-helper");
 const bcrypt        = require("bcrypt");
+
+//used for updating tweets using thier object id assigned by mongo
+const ObjectId      = require("mongodb").ObjectId;
 
 // Defines helper functions for saving and getting tweets, using the database `db`
 module.exports = function makeDataHelpers(db) {
 
-  function isDuplicateAccount (userAccount) {
-    return db.collection("users").find().toArray((err, results) => {
-      for (let user of results) {
+  function isDuplicateAccount (userAccount, req, res) {
+    db.collection("users").find().toArray((err, results) => {
+      for (let user of results) {                         //checks if handle or email is in use
         if (userAccount.email === user.email || userAccount.handle === user.handle) {
-          return true;
+          console.log("user/handle already exists");
+          return;
         }
       }
+      db.collection("users").insertOne(userAccount);       //stores user in database
       console.log("user added:", userAccount.handle);
-      db.collection("users").insertOne(userAccount);
-      return false;
+      req.session.userID = userAccount.handle;
+      res.redirect("/");
     });
   };
+
   return {
 
     // Saves a tweet to `db`
@@ -39,7 +43,6 @@ module.exports = function makeDataHelpers(db) {
         if (err) throw err;
         const sortNewestFirst = (a, b) => a.created_at - b.created_at;
         callback(null, results.sort(sortNewestFirst));
-        //db.close();
       });
     },
 
@@ -56,26 +59,41 @@ module.exports = function makeDataHelpers(db) {
       });
     },
 
-    registerUser: function(Qemail, Qpass, Qhandle, Qname, callback) {
-      if (Qname === "" || Qemail === "" || Qpass === "" || Qhandle === ""){
+    //following function check validity of user and calls function
+    registerUser: function(Qemail, Qpass, Qhandle, Qname, Qreq, Qres, callback) {
+      if (Qname === "" || Qemail === "" || Qpass === "" || Qhandle === "") {
         callback("missing input");
       } else {
-        let hashedPass = bcrypt.hashSync(Qpass, 10);
-        Qhandle = "@" + Qhandle.toLowerCase();
+        let hashedPass = bcrypt.hashSync(Qpass, 10);    //hashes the password before storing it
+        Qhandle = "@" + Qhandle.toLowerCase();          //ensures handle and email are not case-sensitive
         let newUser = {
           email: Qemail.toLowerCase(),
           password: hashedPass,
           handle: Qhandle,
           name: Qname,
-          avatars: userHelper.generateRandomAvatars()
+          avatars: userHelper.generateRandomAvatars()   //uses user helper utility to recieve avatars
         }
-        if (isDuplicateAccount(newUser)) {
-          callback("username/handle already registered");
-        } else {
-          callback();
-        }
+        //checks if user already exists, if not stores new user into database
+        isDuplicateAccount(newUser, Qreq, Qres);
       }
+    },
 
+    //like tweets function to modify and update the properties in the database
+    likeTweet: function(uID, tID, callback) {
+      let formatTID = new ObjectId(tID);        //formats id to allow for mongo query
+      db.collection("tweets").find({_id: formatTID}).toArray((err, results) => {
+        for (let i = 0; i < results[0].likes.length; i++) {
+          if (uID === results[0].likes[i]) {
+            results[0].likes.splice(i, 1);
+            db.collection("tweets").update({_id: formatTID}, {$set:{likes: results[0].likes}});
+            callback(null, true); //true means unlike
+            return;
+          }
+        }
+        results[0].likes.push(uID);
+        db.collection("tweets").update({_id: formatTID}, {$set:{likes: results[0].likes}});
+        callback(null, false); //false means like tweet
+      });
     }
 
   };

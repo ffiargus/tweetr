@@ -1,15 +1,13 @@
 /*
- * Client-side JS logic goes here
+ * Client-side JS logic
  * jQuery is already loaded
- * Reminder: Use (and do all your DOM work in) jQuery's document ready function
  */
 
-
 let loginStatus = false;
+let userID = "";
 
 function msToTime(timeStamp) {
-  let d = new Date();
-  let duration = d.getTime() - timeStamp;
+  let duration = Date.now() - timeStamp;
   let minutes = parseInt((duration/(1000*60))%60),
       hours = parseInt((duration/(1000*60*60))%24),
       days = parseInt((duration/(1000*60*60*24))%365),
@@ -43,6 +41,12 @@ function msToTime(timeStamp) {
 
 function createTweetElement(tweetInfo) {
   let tweet = $("<article>").addClass("old-tweet");
+  let like = "";
+  for (liker of tweetInfo.likes) {
+    if (liker === userID) {
+      like = "liked";
+    }
+  }
   tweet.append(
     $("<header>").append(
       $("<img>").attr("src", tweetInfo.user.avatars.small),
@@ -50,19 +54,26 @@ function createTweetElement(tweetInfo) {
       $("<p>").text(tweetInfo.user.handle)),
     $("<p>").text(tweetInfo.content.text),
     $("<footer>").text(msToTime(tweetInfo.created_at)).append(
-      $("<img>").attr("src", "/images/share.png"),
+      $("<a>").attr("href", "mailto:user@example.com").append(
+        $("<img>").attr("src", "/images/share.png")),
       $("<img>").attr("src", "/images/flag.png"),
-      $("<img>").attr("src", "/images/like.png"))
+      $("<p>").text(tweetInfo.likes.length),
+      $("<img>").attr("src", "/images/like.png").
+        addClass("like-button").
+        addClass(like).
+        attr("data-tweetid", tweetInfo._id).
+        attr("data-userid", tweetInfo.user.handle))
   )
   return tweet;
 }
 
-function renderNewTweet(allTweets) {
-  let $tweet = createTweetElement(allTweets.pop());
-  $(".tweets-container").prepend($tweet);
-}
+// function renderNewTweet(allTweets) {
+//   let $tweet = createTweetElement(allTweets.pop());
+//   $(".tweets-container").prepend($tweet);
+// }
 
 function renderTweets(allTweets) {
+  $(".tweets-container").empty();
   for (let tweetInfo of allTweets) {
     let $tweet = createTweetElement(tweetInfo);
     $(".tweets-container").prepend($tweet);
@@ -71,48 +82,55 @@ function renderTweets(allTweets) {
 
 $(function() {
 
+  function toggleLike(element, userUnlike) {
+    if (userUnlike) {
+      $(element).removeClass("liked");
+    } else {
+      $(element).addClass("liked");
+    }
+  }
+
   function toggleLogin(status) {
     if (status) {
-      console.log("cookie here");
-      $("#compose-button").fadeIn("slow");
-      $("#logout-button").fadeIn("slow");
       $("#register-button").fadeOut("fast");
       $("#login-button").fadeOut("fast");
+      $("#compose-button").fadeIn("slow");
+      $("#settings-button").fadeIn("slow");
+      $("#logout-button").fadeIn("slow");
     }
     else {
       $("#compose-button").fadeOut("fast");
       $("#logout-button").fadeOut("fast");
+      $("#settings-button").fadeOut("fast");
       $("#register-button").fadeIn("slow");
       $("#login-button").fadeIn("slow");
     }
   }
 
-  $.get("/tweets/renderlogin/").done((data) => {
-    if (data) {
-      loginStatus = true;
-    }
-    toggleLogin(loginStatus);
-  });
-
-  function loadTweets(q) {
+  function loadTweets() {
     $.ajax({
       url: "/tweets/",
       success: (data) => {
-        if(q === "all") {
-          renderTweets(data);
-          toggleLogin(loginStatus);
-        } else if(q === "new") {
-          renderNewTweet(data);
-        };
+        renderTweets(data);
       },
       failure: () => {
         console.error("loding failed");
       }
     });
   }
+
   $("#flash1").slideUp();
 
-  loadTweets("all");
+  loadTweets();
+
+  //checks for cookie to determine login status
+  $.get("/renderlogin").done((data) => {
+    if (data) {
+      userID = data;
+      loginStatus = true;
+    }
+    toggleLogin(loginStatus);
+  });
 
   $("textarea").on("input", () => {$("#flash1").slideUp()});
 
@@ -128,7 +146,7 @@ $(function() {
         data: serialized,
         success: () => {
           console.log(this.data);
-          loadTweets("new");
+          loadTweets();
         },
         failure: () => {
           console.error("failed");
@@ -136,7 +154,7 @@ $(function() {
       });
     };
     $(".new-tweet").find("textarea").val("");
-    // $(".new-tweet").find(".counter").text(140);
+    $(".new-tweet").find(".counter").text(140);
   });
 
   $("#compose-button").on("click", () => {
@@ -155,11 +173,13 @@ $(function() {
   $("#logout-button").on("click", (event) => {
     event.preventDefault();
     $.ajax({
-        url: "/tweets/logout",
+        url: "/logout",
         method: "POST",
         success: () => {
-          console.log("successs");
-          location.reload();
+          console.log("logout successs");
+          loginStatus = false;
+          toggleLogin(loginStatus);
+          $(".new-tweet").slideUp("fast");
         },
         failure: () => {
           console.error("failed");
@@ -172,7 +192,25 @@ $(function() {
     $("#register-form").slideToggle();
     // $(".new-tweet").find("textarea").focus();
   });
-  // console.log($tweet);
+
+  $(".tweets-container").on("click", ".old-tweet .like-button", function() {
+    let uID = $(this).data("userid");
+    let tID = $(this).data("tweetid")
+    if (loginStatus === true && userID !== uID) {
+      $.ajax({
+        url: `tweets/${tID}`,
+        method: "PUT",
+        success: (unLike) => {
+          toggleLike(this, unLike);
+          loadTweets();
+        },
+        failure: () => {
+          console.error("failed");
+        }
+      });
+    }
+  })
+
 });
 
 
