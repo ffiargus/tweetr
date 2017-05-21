@@ -18,7 +18,7 @@ function msToTime(timeStamp) {
 
   //if statements checking which text to display
   //and accounts for plural
-  if (duration < 30000)           //display just posted if posted within 30 secondss
+  if (duration < 40000)           //display just posted if posted within 40 secondss
     return "Just posted";
   else if(years > 1)
     return years + " Years ago";
