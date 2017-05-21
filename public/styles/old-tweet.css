@@ -61,6 +61,7 @@
 }
 
 .old-tweet footer img {
+  margin-left: 5px;
   padding: 1px;
   float: right;
   width: 20px;
@@ -79,7 +80,25 @@
   cursor: pointer;
 }
 
+.old-tweet .flag-button {
+  cursor: pointer;
+}
+
 .old-tweet .liked {
   border-radius: 10px;
   border: solid 2px orange;
 }
+
+.old-tweet .flaged {
+  border-radius: 10px;
+  border: solid 2px blue;
+}
+
+.tweet-flag {
+  box-shadow: 10px 10px 7px #00a087;
+  opacity : 1;
+}
+
+
+
+

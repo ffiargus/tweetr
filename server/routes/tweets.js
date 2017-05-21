@@ -23,6 +23,7 @@ module.exports = function(DataHelpers) {
       return;
     }
 
+    //creates tweet element with empty properties to be filled by Datahelpers
     const tweet = {
       user: {
         name: "",
@@ -59,6 +60,18 @@ module.exports = function(DataHelpers) {
     })
   });
 
+  //handles flag requests using a put method
+  tweetsRoutes.put("/flag/:tID", function(req, res) {
+    let uID = req.session.userID;
+    let tID = req.params.tID;
+    DataHelpers.flagTweet(uID, tID, (err, unFlag) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.json(unFlag);
+      }
+    })
+  });
   return tweetsRoutes;
 
 }

@@ -1,3 +1,5 @@
+//function handling the text limit counter
+
 $(function() {
   $(".new-tweet").on("input", "textarea", function() {
     let textAmount = +$(this).val().length;

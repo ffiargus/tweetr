@@ -90,9 +90,30 @@ module.exports = function makeDataHelpers(db) {
             return;
           }
         }
-        results[0].likes.push(uID);
-        db.collection("tweets").update({_id: formatTID}, {$set:{likes: results[0].likes}});
-        callback(null, false); //false means like tweet
+        if (uID) {
+          results[0].likes.push(uID);
+          db.collection("tweets").update({_id: formatTID}, {$set:{likes: results[0].likes}});
+          callback(null, false); //false means like tweet
+        }
+      });
+    },
+
+    flagTweet: function(uID, tID, callback) {
+      let formatTID = new ObjectId(tID);        //formats id to allow for mongo query
+      db.collection("tweets").find({_id: formatTID}).toArray((err, results) => {
+        for (let i = 0; i < results[0].flags.length; i++) {
+          if (uID === results[0].flags[i]) {
+            results[0].flags.splice(i, 1); //splices array and pushes to database
+            db.collection("tweets").update({_id: formatTID}, {$set:{flags: results[0].flags}});
+            callback(null, true); //true means unflag
+            return;
+          }
+        }
+        if (uID) {
+          results[0].flags.push(uID);
+          db.collection("tweets").update({_id: formatTID}, {$set:{flags: results[0].flags}});
+          callback(null, false); //false means flag tweet
+        }
       });
     }
 

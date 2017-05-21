@@ -25,13 +25,11 @@ h2 {
 
 #submit-post {
   float: left;
-  /*display: inline;*/
 }
 
 .counter {
   float: right;
   font-style: italic;
-  /*display: inline;*/
 }
 
 textarea {

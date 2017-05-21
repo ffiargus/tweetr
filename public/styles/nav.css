@@ -21,19 +21,12 @@ label {
   margin-top: 8px
 }
 
-input[type="submit"] {
-  /*margin: 5px;*/
-  /*position: absolute;*/
-  margin-bottom: 0px;
-}
-
 #login-form {
   float: right;
   width: 300px;
   margin: 90px 0 0 60%;
   padding: 2%;
   position: fixed;
-  /*z-index: 1;*/
   background-color: white;
   border-radius: 5px;
   border: solid 1px black;
@@ -72,6 +65,8 @@ input[type="submit"] {
   right: 230px;
   top: 2px;
   display: none;
+  padding: 20px 0 20px 0;
+  text-align: center;
 }
 
 #compose-button {
@@ -99,7 +94,6 @@ div.button {
   border-radius: 5px;
   background-color: #eee;
   border: solid 1px black;
-  /*float: right;*/
   color: #00a087;
   width: 100px;
   padding: 20px;
@@ -108,7 +102,6 @@ div.button {
   margin: 10px;
   cursor: pointer;
   text-align: center;
-  /*display: none;*/
 }
 
 div.button:hover {

@@ -6,6 +6,8 @@
 let loginStatus = false;
 let userID = "";
 
+//function to calculate and display appropriate date message
+//based on timestamp
 function msToTime(timeStamp) {
   let duration = Date.now() - timeStamp;
   let minutes = parseInt((duration/(1000*60))%60),
@@ -14,7 +16,9 @@ function msToTime(timeStamp) {
       months = parseInt((duration/(1000*60*60*24*30))%12),
       years = parseInt((duration/(1000*60*60*24*365)));
 
-  if (duration < 30000)
+  //if statements checking which text to display
+  //and accounts for plural
+  if (duration < 30000)           //display just posted if posted within 30 secondss
     return "Just posted";
   else if(years > 1)
     return years + " Years ago";
@@ -40,13 +44,28 @@ function msToTime(timeStamp) {
 
 
 function createTweetElement(tweetInfo) {
-  let tweet = $("<article>").addClass("old-tweet");
+
   let like = "";
-  for (liker of tweetInfo.likes) {
+  let flag = "";
+  let containFlag = "";
+
+  for (let liker of tweetInfo.likes) {        //checks if user likes tweet
     if (liker === userID) {
       like = "liked";
     }
   }
+
+  for (let flager of tweetInfo.flags) {        //checks if user flagged tweet
+    if (flager === userID) {
+      flag = "flaged";
+      containFlag = "tweet-flag";
+    }
+  }
+
+  //creating the article container for the tweet
+  let tweet = $("<article>").addClass("old-tweet").addClass(containFlag);
+
+  //appends each element required for the tweet article
   tweet.append(
     $("<header>").append(
       $("<img>").attr("src", tweetInfo.user.avatars.small),
@@ -54,32 +73,30 @@ function createTweetElement(tweetInfo) {
       $("<p>").text(tweetInfo.user.handle)),
     $("<p>").text(tweetInfo.content.text),
     $("<footer>").text(msToTime(tweetInfo.created_at)).append(
-      $("<a>").attr("href", "mailto:user@example.com").append(
-        $("<img>").attr("src", "/images/share.png")),
-      $("<img>").attr("src", "/images/flag.png"),
       $("<p>").text(tweetInfo.likes.length),
       $("<img>").attr("src", "/images/like.png").
-        addClass("like-button").
-        addClass(like).
+        addClass("like-button").                                //adding like button class
+        addClass(like).                                         //adds additional class if tweet is liked
         attr("data-tweetid", tweetInfo._id).
-        attr("data-userid", tweetInfo.user.handle))
+        attr("data-userid", tweetInfo.user.handle),
+      $("<img>").attr("src", "/images/flag.png").
+        addClass("flag-button").
+        addClass(flag),
+      $("<a>").attr("href", "mailto:?subject=Checkout%20this%20tweet!&body=localhost:8080/tweets").append(  //email link to someone
+        $("<img>").attr("src", "/images/share.png")))
   )
   return tweet;
 }
 
-// function renderNewTweet(allTweets) {
-//   let $tweet = createTweetElement(allTweets.pop());
-//   $(".tweets-container").prepend($tweet);
-// }
-
 function renderTweets(allTweets) {
-  $(".tweets-container").empty();
-  for (let tweetInfo of allTweets) {
+  $(".tweets-container").empty();               //clears all tweets before rendering to avoid
+  for (let tweetInfo of allTweets) {            //duplicates
     let $tweet = createTweetElement(tweetInfo);
     $(".tweets-container").prepend($tweet);
   }
 }
 
+//runs on document ready
 $(function() {
 
   function toggleLike(element, userUnlike) {
@@ -90,6 +107,17 @@ $(function() {
     }
   }
 
+  function toggleFlag(element, userUnflag) {
+    if (userUnflag) {
+      $(element).removeClass("flaged");
+      $(element).closest(".old-tweet").removeClass("tweet-flag");
+    } else {
+      $(element).addClass("flaged");
+      $(element).closest(".old-tweet").addClass("tweet-flag");
+    }
+  }
+
+  //hides and shows buttons depending on login status
   function toggleLogin(status) {
     if (status) {
       $("#register-button").fadeOut("fast");
@@ -119,15 +147,18 @@ $(function() {
     });
   }
 
-  $("#flash1").slideUp();
-
-  loadTweets();
+  loadTweets();   //loads tweets when document is ready
 
   //checks for cookie to determine login status
   $.get("/renderlogin").done((data) => {
     if (data) {
       userID = data;
       loginStatus = true;
+      let dispName = data.substring(0, 11);
+      if (userID.length > 11) {
+        dispName = dispName + "..";
+      }
+      $("#settings-button").text(dispName);
     }
     toggleLogin(loginStatus);
   });
@@ -157,6 +188,7 @@ $(function() {
     $(".new-tweet").find(".counter").text(140);
   });
 
+  //buttons toggle form visibility
   $("#compose-button").on("click", () => {
     $("#flash1").slideUp();
     $("#flash2").slideUp();
@@ -167,7 +199,13 @@ $(function() {
   $("#login-button").on("click", () => {
     $("#register-form").slideUp();
     $("#login-form").slideToggle();
-    // $(".").find("textarea").focus();
+    $("#login-form").find(".email").focus();
+  });
+
+  $("#register-button").on("click", () => {
+    $("#login-form").slideUp();
+    $("#register-form").slideToggle();
+    $("#register-form").find(".email").focus();
   });
 
   $("#logout-button").on("click", (event) => {
@@ -180,6 +218,7 @@ $(function() {
           loginStatus = false;
           toggleLogin(loginStatus);
           $(".new-tweet").slideUp("fast");
+          location.reload();    //reloads page after successful logout
         },
         failure: () => {
           console.error("failed");
@@ -187,15 +226,11 @@ $(function() {
       });
   });
 
-  $("#register-button").on("click", () => {
-    $("#login-form").slideUp();
-    $("#register-form").slideToggle();
-    // $(".new-tweet").find("textarea").focus();
-  });
-
+  //handles user liking tweets
+  //not using arrow functions here to keep simplicity in using "this"
   $(".tweets-container").on("click", ".old-tweet .like-button", function() {
     let uID = $(this).data("userid");
-    let tID = $(this).data("tweetid")
+    let tID = $(this).data("tweetid");
     if (loginStatus === true && userID !== uID) {
       $.ajax({
         url: `tweets/${tID}`,
@@ -209,7 +244,28 @@ $(function() {
         }
       });
     }
-  })
+  });
+
+  //handles user flagging tweets, almost identical to liking
+  //with a few differences
+  //traverses up DOM to use ids stored in like button
+  $(".tweets-container").on("click", ".old-tweet .flag-button", function() {
+    let uID = $(this).closest(".old-tweet").find(".like-button").data("userid");
+    let tID = $(this).closest(".old-tweet").find(".like-button").data("tweetid");
+    if (loginStatus === true) {
+      $.ajax({
+        url: `tweets/flag/${tID}`,
+        method: "PUT",
+        success: (unFlag) => {
+          toggleFlag(this, unFlag);
+          loadTweets();
+        },
+        failure: () => {
+          console.error("failed");
+        }
+      });
+    }
+  });
 
 });
 
