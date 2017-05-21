@@ -1,0 +1,106 @@
+
+.old-tweet {
+
+  border-radius: 5px;
+  margin: 2em;
+  border: solid 1px lightgrey;
+  opacity: 0.75;
+
+  header {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background-color: #eee;
+    padding: 10px 10px 40px 10px;
+
+    h1 {
+        margin: 0 0 0 0;
+        display: inline;
+    }
+
+    p {
+      float: right;
+      display: inline;
+      padding: 0;
+    }
+
+    img {
+      margin: 1%;
+      float: left;
+      width: 60px;
+      height: 60px
+    }
+  }
+
+  p {
+    padding: 20px;
+    border: 10px;
+    margin: 10px;
+    display: block;
+    overflow-wrap: break-word;
+  }
+
+  footer {
+    border-top: solid 1px lightgrey;
+    padding: 5px;
+    font-style: italic;
+
+    p {
+      padding: 1px 5px 0 2px;
+      margin: 0;
+      border: 0;
+      float: right;
+      display: none;
+    }
+
+    img {
+      margin-left: 5px;
+      padding: 1px;
+      float: right;
+      width: 20px;
+      height: 20px;
+      display: none;
+    }
+  }
+
+  .like-button {
+    cursor: pointer;
+  }
+
+  .flag-button {
+    cursor: pointer;
+  }
+
+  .liked {
+    border-radius: 10px;
+    border: solid 2px orange;
+  }
+
+  .flaged {
+    border-radius: 10px;
+    border: solid 2px blue;
+  }
+
+}
+
+.old-tweet:hover {
+  border-radius: 5px;
+  margin: 2em;
+  border: solid 1px black;
+  opacity: 1;
+}
+
+.old-tweet:hover footer p {
+  display: block;
+}
+
+.old-tweet:hover footer img {
+  display: block;
+}
+
+
+.tweet-flag {
+  box-shadow: 10px 10px 7px $mainColor;
+  opacity : 1;
+}
+
+

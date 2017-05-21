@@ -99,6 +99,7 @@ function renderTweets(allTweets) {
 //runs on document ready
 $(function() {
 
+  //helper functions
   function toggleLike(element, userUnlike) {
     if (userUnlike) {
       $(element).removeClass("liked");

@@ -6,11 +6,18 @@ const PORT          = 8080;
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const cookieSession = require("cookie-session");
+const sassMW        = require("node-sass-middleware")
 const app           = express();
 const MongoClient   = require("mongodb").MongoClient;
 const MONGODB_URI   = "mongodb://localhost:27017/tweeter";
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(sassMW({
+  src: './styles', // Location of SASS files
+  dest: './public/css', // Compiled CSS location
+  prefix:  '/css'       // URL path to be intercepted by the middleware and
+}))                     // compiled on the fly. When the browser tries to
+                        // GET /css/main.css, it compiles ./styles/main.scss
 app.use(express.static("public"));
 app.use(cookieSession({
   name: "session",

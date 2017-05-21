@@ -1,0 +1,207 @@
+html {
+  box-sizing: border-box; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
+main {
+  width: 450px;
+  background-color: white;
+  padding-top: 140px;
+  margin: auto;
+  height: 100%; }
+
+body {
+  color: #244751;
+  background-color: #eee;
+  font-family: 'Roboto Condensed', sans-serif; }
+
+.new-tweet {
+  border-radius: 5px;
+  padding: 0 1em 2em 1em;
+  background-color: #eee;
+  margin: 0 2em 0 2em;
+  border: solid 1px lightgrey;
+  display: none; }
+
+h2 {
+  border-bottom: solid 1px; }
+
+.flash-message {
+  color: red;
+  padding: 0 0 20px 70px;
+  margin: 5px;
+  display: inline;
+  display: none; }
+
+.negInput {
+  color: red; }
+
+#submit-post {
+  float: left; }
+
+.counter {
+  float: right;
+  font-style: italic; }
+
+textarea {
+  padding: 5px;
+  width: 100%; }
+
+.old-tweet {
+  border-radius: 5px;
+  margin: 2em;
+  border: solid 1px lightgrey;
+  opacity: 0.75; }
+  .old-tweet header {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background-color: #eee;
+    padding: 10px 10px 40px 10px; }
+    .old-tweet header h1 {
+      margin: 0 0 0 0;
+      display: inline; }
+    .old-tweet header p {
+      float: right;
+      display: inline;
+      padding: 0; }
+    .old-tweet header img {
+      margin: 1%;
+      float: left;
+      width: 60px;
+      height: 60px; }
+  .old-tweet p {
+    padding: 20px;
+    border: 10px;
+    margin: 10px;
+    display: block;
+    overflow-wrap: break-word; }
+  .old-tweet footer {
+    border-top: solid 1px lightgrey;
+    padding: 5px;
+    font-style: italic; }
+    .old-tweet footer p {
+      padding: 1px 5px 0 2px;
+      margin: 0;
+      border: 0;
+      float: right;
+      display: none; }
+    .old-tweet footer img {
+      margin-left: 5px;
+      padding: 1px;
+      float: right;
+      width: 20px;
+      height: 20px;
+      display: none; }
+  .old-tweet .like-button {
+    cursor: pointer; }
+  .old-tweet .flag-button {
+    cursor: pointer; }
+  .old-tweet .liked {
+    border-radius: 10px;
+    border: solid 2px orange; }
+  .old-tweet .flaged {
+    border-radius: 10px;
+    border: solid 2px blue; }
+
+.old-tweet:hover {
+  border-radius: 5px;
+  margin: 2em;
+  border: solid 1px black;
+  opacity: 1; }
+
+.old-tweet:hover footer p {
+  display: block; }
+
+.old-tweet:hover footer img {
+  display: block; }
+
+.tweet-flag {
+  box-shadow: 10px 10px 7px #00a087;
+  opacity: 1; }
+
+nav {
+  position: fixed;
+  z-index: 2;
+  height: 80px;
+  width: 100%;
+  background-color: #00a087;
+  color: #e8fdff;
+  padding: 0 2em 0 2em; }
+  nav input[type="email"], nav input[type="password"], nav input[type="text"] {
+    width: 70%;
+    float: right;
+    margin: 2px;
+    display: block; }
+  nav #login-form {
+    float: right;
+    width: 300px;
+    margin: 90px 0 0 60%;
+    padding: 2%;
+    position: fixed;
+    background-color: white;
+    border-radius: 5px;
+    border: solid 1px black;
+    color: black;
+    display: none; }
+  nav #register-form {
+    float: right;
+    width: 300px;
+    margin: 90px 0 0 60%;
+    padding: 2%;
+    position: fixed;
+    z-index: 3;
+    background-color: white;
+    border-radius: 5px;
+    border: solid 1px black;
+    color: black;
+    display: none; }
+
+#nav-bar .logo {
+  float: left;
+  width: 80px;
+  height: 80px; }
+
+#nav-bar .header {
+  padding-left: 10px;
+  float: left;
+  line-height: 80px;
+  font-size: 2em; }
+
+#nav-bar label {
+  display: inline-block;
+  float: left;
+  margin-top: 8px; }
+
+#nav-bar #settings-button {
+  right: 230px;
+  top: 2px;
+  display: none;
+  padding: 20px 0 20px 0;
+  text-align: center; }
+
+#nav-bar #compose-button, #nav-bar #register-button {
+  right: 125px;
+  top: 2px; }
+
+#nav-bar #logout-button, #nav-bar #login-button {
+  right: 20px;
+  top: 2px; }
+
+#nav-bar div.button {
+  position: absolute;
+  border-radius: 5px;
+  background-color: #eee;
+  border: solid 1px black;
+  color: #00a087;
+  width: 100px;
+  padding: 20px;
+  display: block;
+  opacity: 0.95;
+  margin: 10px;
+  cursor: pointer;
+  text-align: center; }
+
+#nav-bar div.button:hover {
+  opacity: 1;
+  color: black; }

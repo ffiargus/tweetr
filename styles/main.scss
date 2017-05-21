@@ -1,0 +1,28 @@
+$mainColor: #00a087;
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+main {
+  width: 450px;
+  background-color: white;
+  padding-top: 140px;
+  margin: auto;
+  height: 100%;
+}
+
+body {
+  color: #244751;
+  background-color: #eee;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+@import 'new-tweet';
+@import 'old-tweet';
+@import 'nav';
+
