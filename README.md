@@ -2,7 +2,20 @@
 
 Tweeter is a simple, single-page Twitter clone.
 
-This repository is the starter code for the project: Students will fork and clone this repository, then build upon it to practice their HTML, CSS, JS, jQuery and AJAX front-end skills, and their Node, Express and MongoDB back-end skills.
+## Final Product (Version 1.0.0)
+
+!["fullpage"](/documentation/pic2.png)
+This is the full page, when logged in, the login and register buttons will change to compose and logout and the user name will be displayed next to them.
+
+!["registration"](/documentation/pic1.png)
+Clicking on the registration button will drop down a form to allow user registration
+
+!["flagsandlikes"](/documentation/pic3.png)
+Users can like other users tweets, and like will be tracked. Aditionally, users can also flag tweets to distinguish them from others
+
+
+A live version was deployed and can be visited from the link below:
+https://gentle-fjord-27216.herokuapp.com/
 
 ## Getting Started
 
@@ -15,3 +28,11 @@ This repository is the starter code for the project: Students will fork and clon
 
 - Express
 - Node 5.10.x or above
+- bcrypt
+- body-parser
+- chance
+- cookie-session
+- dotenv
+- md5
+- mongodb
+- node-sass-middleware
