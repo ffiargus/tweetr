@@ -18,6 +18,7 @@ module.exports = function(DataHelpers) {
     DataHelpers.validateLogin(req.body.email, req.body.password, (handle, err) => {
       if (!handle) {
         console.error(err);
+        res.redirect("/");
       } else {
         console.log(handle, "logged in");
         req.session.userID = handle;
