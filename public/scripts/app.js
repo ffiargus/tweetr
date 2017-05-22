@@ -79,7 +79,7 @@ function createTweetElement(tweetInfo) {
         addClass(like).                                         //adds additional class if tweet is liked
         attr("data-tweetid", tweetInfo._id).
         attr("data-userid", tweetInfo.user.handle),
-      $("<img>").attr("src", "/images/flag.png").
+      $("<img>").attr("src", "/images/flag.jpg").
         addClass("flag-button").
         addClass(flag),
       $("<a>").attr("href", "mailto:?subject=Checkout%20this%20tweet!&body=localhost:8080/tweets").append(  //email link to someone
