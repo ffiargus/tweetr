@@ -5,12 +5,15 @@ Tweeter is a simple, single-page Twitter clone.
 ## Final Product (Version 1.0.0)
 
 !["fullpage"](/documentation/pic2.png)
+
 This is the full page, when logged in, the login and register buttons will change to compose and logout and the user name will be displayed next to them.
 
 !["registration"](/documentation/pic1.png)
+
 Clicking on the registration button will drop down a form to allow user registration
 
 !["flagsandlikes"](/documentation/pic3.png)
+
 Users can like other users tweets, and like will be tracked. Aditionally, users can also flag tweets to distinguish them from others
 
 
